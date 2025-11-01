@@ -26,6 +26,20 @@ import (
 // export TEST_DB_PASSWORD=postgres
 // export TEST_DB_NAME=outbox_test
 
+// Mock event type
+type mockEventType struct {
+	name string
+	id   int
+}
+
+func (m mockEventType) GetName() string {
+	return m.name
+}
+
+func (m mockEventType) GetID() int {
+	return m.id
+}
+
 func setupIntegrationDB(t *testing.T) *gorm.DB {
 	host := os.Getenv("TEST_DB_HOST")
 	port := os.Getenv("TEST_DB_PORT")
