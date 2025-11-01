@@ -76,6 +76,13 @@ jobs:
       - name: Run unit tests
         run: go test ./sqlchannel -run 'Test[^I]' -short -v
 
+      - name: Setup test database
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE outbox_test;" || true
+          psql -h localhost -U postgres -d outbox_test -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
+
       - name: Run integration tests
         env:
           TEST_DB_HOST: localhost
@@ -83,7 +90,6 @@ jobs:
           TEST_DB_USER: postgres
           TEST_DB_PASSWORD: postgres
           TEST_DB_NAME: outbox_test
-        # run: go test -v ./sqlchannel -run 'TestI'
         run: go test -tags=integration -v ./sqlchannel -run 'TestI'
 
       - name: Generate coverage report

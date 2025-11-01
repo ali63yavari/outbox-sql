@@ -2,7 +2,33 @@
 
 ## Issues Fixed
 
-### 1. Cache Restoration Errors
+### 1. PostgreSQL UUID Extension Missing
+
+**Problem:**
+```
+integration_test.go:80: Failed to migrate database: ERROR: function uuid_generate_v4() does not exist (SQLSTATE 42883)
+```
+
+The integration tests were failing because the PostgreSQL database didn't have the `uuid-ossp` extension enabled, which is required for the `uuid_generate_v4()` function used in the database schema.
+
+**Solution:**
+Added a "Setup test database" step to both CI and coverage workflows that:
+1. Creates the `outbox_test` database (if it doesn't exist)
+2. Enables the `uuid-ossp` extension
+
+**Code added to workflows:**
+```yaml
+- name: Setup test database
+  env:
+    PGPASSWORD: postgres
+  run: |
+    psql -h localhost -U postgres -d postgres -c "CREATE DATABASE outbox_test;" || true
+    psql -h localhost -U postgres -d outbox_test -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
+```
+
+This step runs before the integration tests and ensures the database is properly configured.
+
+### 2. Cache Restoration Errors
 
 **Problem:**
 ```
@@ -49,7 +75,7 @@ Replaced manual cache configuration with built-in caching from `actions/setup-go
 - ✅ Simpler configuration
 - ✅ Applied to all workflows (ci.yml, coverage.yml, release.yml)
 
-### 2. golangci-lint Configuration Warnings
+### 3. golangci-lint Configuration Warnings
 
 **Problem:**
 ```
@@ -68,7 +94,7 @@ Updated `.golangci.yml`:
 - Changed `output.format` to `output.formats` array
 - Removed deprecated linters (`varcheck`, `structcheck`, `deadcode`) from disable list
 
-### 3. Coverage Pipeline Failure
+### 4. Coverage Pipeline Failure
 
 **Problem:**
 ```

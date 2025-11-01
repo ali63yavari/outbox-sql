@@ -38,6 +38,13 @@ jobs:
       - name: Install dependencies
         run: go mod download
 
+      - name: Setup test database
+        env:
+          PGPASSWORD: postgres
+        run: |
+          psql -h localhost -U postgres -d postgres -c "CREATE DATABASE outbox_test;" || true
+          psql -h localhost -U postgres -d outbox_test -c "CREATE EXTENSION IF NOT EXISTS \"uuid-ossp\";"
+
       - name: Generate coverage report
         env:
           TEST_DB_HOST: localhost
