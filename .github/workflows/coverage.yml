@@ -56,6 +56,7 @@ jobs:
 
       - name: Create coverage badge
         uses: schneegans/dynamic-badges-action@v1.7.0
+        continue-on-error: true
         with:
           auth: ${{ secrets.GIST_SECRET }}
           gistID: ${{ secrets.GIST_ID }}
@@ -68,6 +69,7 @@ jobs:
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v4
+        continue-on-error: true
         with:
           file: ./coverage.out
           flags: unittests
