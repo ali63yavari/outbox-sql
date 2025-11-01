@@ -1,9 +1,9 @@
-module github.com/ali63yavari/outbox-sql.git
+module github.com/ali63yavari/outbox-sql
 
 go 1.23.12
 
 require (
-	github.com/ali63yavari/outbox-abstraction v0.0.0
+	github.com/ali63yavari/outbox-abstraction v1.0.0
 	github.com/google/uuid v1.6.0
 	gorm.io/gorm v1.31.0
 )
