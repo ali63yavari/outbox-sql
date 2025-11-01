@@ -158,65 +158,48 @@ For integration tests, the following environment variables can be configured:
 
 ## Continuous Integration
 
-For CI/CD pipelines, use the following workflow:
+This repository uses GitHub Actions for automated testing and coverage reporting.
 
-```yaml
-name: Tests
+### Workflows
 
-on: [push, pull_request]
+1. **CI Workflow** (`.github/workflows/ci.yml`)
+   - Runs on every push and pull request
+   - Jobs: Lint → Test → Build
+   - Includes unit and integration tests
+   - Generates coverage reports
+   - Uploads coverage to Codecov
 
-jobs:
-  unit-tests:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.23'
-      
-      - name: Test abstraction
-        run: |
-          cd outbox_uow_abstraction
-          go test -v ./abstraction
-      
-      - name: Test PostgreSQL (unit)
-        run: |
-          cd outbox_uow_sql
-          go test -v ./sql_channel
+2. **Coverage Workflow** (`.github/workflows/coverage.yml`)
+   - Runs on push to `main` branch
+   - Generates coverage badge
+   - Updates coverage statistics
 
-  integration-tests:
-    runs-on: ubuntu-latest
-    services:
-      postgres:
-        image: postgres:15-alpine
-        env:
-          POSTGRES_PASSWORD: postgres
-          POSTGRES_DB: outbox_test
-        options: >-
-          --health-cmd pg_isready
-          --health-interval 10s
-          --health-timeout 5s
-          --health-retries 5
-        ports:
-          - 5432:5432
-    
-    steps:
-      - uses: actions/checkout@v3
-      - uses: actions/setup-go@v4
-        with:
-          go-version: '1.23'
-      
-      - name: Integration tests
-        env:
-          TEST_DB_HOST: localhost
-          TEST_DB_PORT: 5432
-          TEST_DB_USER: postgres
-          TEST_DB_PASSWORD: postgres
-          TEST_DB_NAME: outbox_test
-        run: |
-          cd outbox_uow_sql
-          go test -tags=integration -v ./sql_channel
+3. **Release Workflow** (`.github/workflows/release.yml`)
+   - Runs when a version tag is pushed
+   - Creates GitHub releases automatically
+   - Generates changelog
+
+### CI Test Commands
+
+The CI pipeline uses the following test commands:
+
+```bash
+# Unit tests
+go test ./sqlchannel -run 'Test[^I]' -short -v
+
+# Integration tests (with PostgreSQL service)
+go test -v ./sqlchannel -run 'TestI'
+
+# Coverage
+go test -coverprofile=coverage.out -covermode=atomic ./sqlchannel
 ```
+
+### Setting Up CI
+
+See [GitHub Actions Setup Guide](.github/SETUP.md) for detailed instructions on:
+- Required secrets (Codecov, coverage badges)
+- Customizing workflows
+- Troubleshooting CI issues
 
 ## Test Results
 
