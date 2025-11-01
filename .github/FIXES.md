@@ -2,7 +2,54 @@
 
 ## Issues Fixed
 
-### 1. golangci-lint Configuration Warnings
+### 1. Cache Restoration Errors
+
+**Problem:**
+```
+Error: /usr/bin/tar: ../../../go/pkg/mod/gorm.io/driver/sqlite@v1.6.0/*.go: Cannot open: File exists
+```
+
+The manual cache configuration using `actions/cache@v4` was causing conflicts when restoring cached Go modules, resulting in "File exists" errors during tar extraction.
+
+**Solution:**
+Replaced manual cache configuration with built-in caching from `actions/setup-go@v5`:
+
+**Before:**
+```yaml
+- name: Set up Go
+  uses: actions/setup-go@v5
+  with:
+    go-version: '1.23'
+
+- name: Cache Go modules
+  uses: actions/cache@v4
+  with:
+    path: |
+      ~/.cache/go-build
+      ~/go/pkg/mod
+    key: ${{ runner.os }}-go-${{ hashFiles('**/go.sum') }}
+    restore-keys: |
+      ${{ runner.os }}-go-
+```
+
+**After:**
+```yaml
+- name: Set up Go
+  uses: actions/setup-go@v5
+  with:
+    go-version: '1.23'
+    cache: true
+    cache-dependency-path: go.sum
+```
+
+**Benefits:**
+- ✅ No more cache conflicts
+- ✅ Automatic cache key management
+- ✅ Better cache invalidation
+- ✅ Simpler configuration
+- ✅ Applied to all workflows (ci.yml, coverage.yml, release.yml)
+
+### 2. golangci-lint Configuration Warnings
 
 **Problem:**
 ```
@@ -21,7 +68,7 @@ Updated `.golangci.yml`:
 - Changed `output.format` to `output.formats` array
 - Removed deprecated linters (`varcheck`, `structcheck`, `deadcode`) from disable list
 
-### 2. Coverage Pipeline Failure
+### 3. Coverage Pipeline Failure
 
 **Problem:**
 ```
