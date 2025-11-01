@@ -13,8 +13,8 @@ outbox_uow/
 ## Target Structure (Multiple Repos)
 
 ```
-github.com/arash/outbox-abstraction/    (Repository 1)
-github.com/arash/outbox-sql/          (Repository 2)
+github.com/ali63yavari/outbox-abstraction/    (Repository 1)
+github.com/ali63yavari/outbox-sql/          (Repository 2)
 ```
 
 ## Step-by-Step Migration
@@ -24,7 +24,7 @@ github.com/arash/outbox-sql/          (Repository 2)
 #### 1. Create New Repository
 
 ```bash
-# On GitHub, create: github.com/arash/outbox-abstraction
+# On GitHub, create: github.com/ali63yavari/outbox-abstraction
 ```
 
 #### 2. Extract Abstraction Code
@@ -42,7 +42,7 @@ cp -r /path/to/outbox_uow/outbox_uow_abstraction/* .
 
 # Update go.mod
 cat > go.mod << 'EOF'
-module github.com/arash/outbox-abstraction
+module github.com/ali63yavari/outbox-abstraction
 
 go 1.23
 
@@ -62,13 +62,13 @@ Core interfaces and types for the Outbox Pattern implementation.
 ## Installation
 
 ```bash
-go get github.com/arash/outbox-abstraction
+go get github.com/ali63yavari/outbox-abstraction
 ```
 
 ## Usage
 
 ```go
-import "github.com/arash/outbox-abstraction/abstraction"
+import "github.com/ali63yavari/outbox-abstraction/abstraction"
 
 // Create event
 event := abstraction.CreateNewEvent(...)
@@ -79,8 +79,8 @@ manager := abstraction.NewOutboxEventManager()
 
 ## Implementations
 
-- [PostgreSQL](https://github.com/arash/outbox-sql) - Official implementation
-- [NATS](https://github.com/arash/outbox-nats) - Community implementation
+- [PostgreSQL](https://github.com/ali63yavari/outbox-sql) - Official implementation
+- [NATS](https://github.com/ali63yavari/outbox-nats) - Community implementation
 - See [EXTENSION_GUIDE.md](EXTENSION_GUIDE.md) for creating your own
 
 ## Documentation
@@ -94,7 +94,7 @@ git add .
 git commit -m "Initial commit: core abstraction"
 
 # Add remote and push
-git remote add origin git@github.com:arash/outbox-abstraction.git
+git remote add origin git@github.com:ali63yavari/outbox-abstraction.git
 git branch -M main
 git push -u origin main
 ```
@@ -112,7 +112,7 @@ git push origin v1.0.0
 #### 1. Create New Repository
 
 ```bash
-# On GitHub, create: github.com/arash/outbox-sql
+# On GitHub, create: github.com/ali63yavari/outbox-sql
 ```
 
 #### 2. Extract PostgreSQL Code
@@ -130,12 +130,12 @@ cp -r /path/to/outbox_uow/outbox_uow_sql/* .
 
 # Update go.mod to reference public abstraction
 cat > go.mod << 'EOF'
-module github.com/arash/outbox-sql
+module github.com/ali63yavari/outbox-sql
 
 go 1.23
 
 require (
-    github.com/arash/outbox-abstraction v1.0.0
+    github.com/ali63yavari/outbox-abstraction v1.0.0
     github.com/google/uuid v1.6.0
     gorm.io/gorm v1.31.0
 )
@@ -167,15 +167,15 @@ PostgreSQL implementation of the Outbox Pattern.
 ## Installation
 
 ```bash
-go get github.com/arash/outbox-sql
+go get github.com/ali63yavari/outbox-sql
 ```
 
 ## Quick Start
 
 ```go
 import (
-    "github.com/arash/outbox-abstraction/abstraction"
-    "github.com/arash/outbox-sql/sql_channel"
+    "github.com/ali63yavari/outbox-abstraction/abstraction"
+    "github.com/ali63yavari/outbox-sql/sql_channel"
 )
 
 // Create channel
@@ -201,7 +201,7 @@ make docker-integration
 - [Quick Start](QUICKSTART.md)
 - [Development Guide](DEVELOPMENT.md)
 - [Testing Guide](TESTING.md)
-- [Core Abstraction](https://github.com/arash/outbox-abstraction)
+- [Core Abstraction](https://github.com/ali63yavari/outbox-abstraction)
 EOF
 
 # Download dependencies
@@ -212,7 +212,7 @@ git add .
 git commit -m "Initial commit: PostgreSQL implementation"
 
 # Add remote and push
-git remote add origin git@github.com:arash/outbox-sql.git
+git remote add origin git@github.com:ali63yavari/outbox-sql.git
 git branch -M main
 git push -u origin main
 ```
@@ -234,7 +234,7 @@ cd ~/temp/outbox-sql
 
 # Update import paths in all Go files
 find . -name "*.go" -type f -exec sed -i '' \
-  's|github.com/arash/outbox_abstraction/abstraction|github.com/arash/outbox-abstraction/abstraction|g' {} \;
+  's|github.com/ali63yavari/outbox_abstraction/abstraction|github.com/ali63yavari/outbox-abstraction/abstraction|g' {} \;
 
 # Verify
 go mod tidy
@@ -266,10 +266,10 @@ make docker-integration
 
 ```bash
 # Install abstraction
-go get github.com/arash/outbox-abstraction
+go get github.com/ali63yavari/outbox-abstraction
 
 # Install PostgreSQL implementation
-go get github.com/arash/outbox-sql
+go get github.com/ali63yavari/outbox-sql
 ```
 
 ### In Code
@@ -278,8 +278,8 @@ go get github.com/arash/outbox-sql
 package main
 
 import (
-    "github.com/arash/outbox-abstraction/abstraction"
-    "github.com/arash/outbox-sql/sql_channel"
+    "github.com/ali63yavari/outbox-abstraction/abstraction"
+    "github.com/ali63yavari/outbox-sql/sql_channel"
 )
 
 func main() {
@@ -298,13 +298,13 @@ func main() {
 
 ```bash
 # Stable abstraction
-github.com/arash/outbox-abstraction v1.0.0  (rarely changes)
+github.com/ali63yavari/outbox-abstraction v1.0.0  (rarely changes)
 
 # Active development on implementation
-github.com/arash/outbox-sql v1.0.0
-github.com/arash/outbox-sql v1.1.0  (bug fix)
-github.com/arash/outbox-sql v1.2.0  (optimization)
-github.com/arash/outbox-sql v2.0.0  (major update)
+github.com/ali63yavari/outbox-sql v1.0.0
+github.com/ali63yavari/outbox-sql v1.1.0  (bug fix)
+github.com/ali63yavari/outbox-sql v1.2.0  (optimization)
+github.com/ali63yavari/outbox-sql v2.0.0  (major update)
 ```
 
 ### 2. Clear Dependencies
@@ -321,27 +321,27 @@ Implementations (can change)
 
 ```
 Official:
-├── github.com/arash/outbox-abstraction
-└── github.com/arash/outbox-sql
+├── github.com/ali63yavari/outbox-abstraction
+└── github.com/ali63yavari/outbox-sql
 
 Community can create:
 ├── github.com/someone/outbox-nats
 ├── github.com/another/outbox-kafka
 └── github.com/team/outbox-redis
 
-All reference: github.com/arash/outbox-abstraction
+All reference: github.com/ali63yavari/outbox-abstraction
 ```
 
 ### 4. Easier Maintenance
 
 ```
 Bug in PostgreSQL?
-├─ Fix in github.com/arash/outbox-sql
+├─ Fix in github.com/ali63yavari/outbox-sql
 ├─ Release v1.0.1
 └─ Abstraction unchanged ✓
 
 New feature in abstraction?
-├─ Update github.com/arash/outbox-abstraction
+├─ Update github.com/ali63yavari/outbox-abstraction
 ├─ Release v2.0.0
 ├─ Update implementations to v2.0.0 when ready
 └─ Backward compatible if designed well ✓
@@ -494,12 +494,12 @@ cd outbox_uow/outbox_uow_sql
 module outbox_uow_sql
 
 require (
-    github.com/arash/outbox-abstraction v1.0.0  // Changed!
+    github.com/ali63yavari/outbox-abstraction v1.0.0  // Changed!
     // ... other deps
 )
 
 # Remove local replace directive
-# replace github.com/arash/outbox_abstraction => ../outbox_uow_abstraction
+# replace github.com/ali63yavari/outbox_abstraction => ../outbox_uow_abstraction
 ```
 
 ## Summary

@@ -5,15 +5,15 @@ PostgreSQL implementation of the Outbox Pattern.
 ## Installation
 
 ```bash
-go get github.com/arash/outbox-sql
+go get github.com/ali63yavari/outbox-sql
 ```
 
 ## Quick Start
 
 ```go
 import (
-    "github.com/arash/outbox-abstraction/abstraction"
-    "github.com/arash/outbox-sql/sql_channel"
+    "github.com/ali63yavari/outbox-abstraction/abstraction"
+    "github.com/ali63yavari/outbox-sql/sql_channel"
 )
 
 // Create channel

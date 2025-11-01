@@ -77,7 +77,7 @@ package main
 import (
     "context"
     "time"
-    "github.com/arash/outbox_abstraction/abstraction"
+    "github.com/ali63yavari/outbox_abstraction/abstraction"
     "outbox_uow_sql/sql_channel"
     "gorm.io/driver/postgres"
     "gorm.io/gorm"

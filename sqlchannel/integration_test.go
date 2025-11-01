@@ -10,7 +10,7 @@ import (
 	"testing"
 	"time"
 
-	"github.com/arash/outbox_abstraction/abstraction"
+	"github.com/ali63yavari/outbox_abstraction/abstraction"
 	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 	"gorm.io/gorm/logger"
