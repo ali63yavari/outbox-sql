@@ -2,10 +2,6 @@ run:
   timeout: 5m
   go: '1.23'
   tests: true
-  skip-dirs:
-    - vendor
-  skip-files:
-    - ".*\\.pb\\.go$"
 
 linters-settings:
   errcheck:
@@ -81,11 +77,16 @@ linters:
 
   disable:
     - typecheck      # Like the front-end of a Go compiler, parses and type-checks Go code
-    - varcheck       # Deprecated
-    - structcheck    # Deprecated
-    - deadcode       # Deprecated
 
 issues:
+  # Exclude directories
+  exclude-dirs:
+    - vendor
+
+  # Exclude files
+  exclude-files:
+    - ".*\\.pb\\.go$"
+
   exclude-rules:
     # Exclude some linters from running on tests files
     - path: _test\.go
@@ -111,7 +112,8 @@ issues:
   new: false
 
 output:
-  format: colored-line-number
+  formats:
+    - format: colored-line-number
   print-issued-lines: true
   print-linter-name: true
   sort-results: true

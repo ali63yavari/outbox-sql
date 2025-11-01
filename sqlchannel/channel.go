@@ -127,16 +127,17 @@ func (c *sqlEventChannel) processBatch() error {
 	log.Printf("processing %d outbox events with type %s", len(events), c.eventType.GetName())
 
 	// Process each event in its own transaction
-	for _, evt := range events {
+	for i := 0; i < len(events); i++ {
+		evt := &events[i]
 		if err := c.handleEvent(c.ctx, evt); err != nil {
-			log.Printf("event %d failed: %v", evt.ID, err)
+			log.Printf("event %d failed: %v", i, err)
 		}
 	}
 
 	return nil
 }
 
-func (c *sqlEventChannel) handleEvent(ctx context.Context, evt EventModel) error {
+func (c *sqlEventChannel) handleEvent(ctx context.Context, evt *EventModel) error {
 	return c.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		err := c.handler(ctx, evt.ToOutboxEvent())
 		now := time.Now()

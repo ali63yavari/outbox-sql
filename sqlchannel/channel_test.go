@@ -6,24 +6,22 @@ import (
 
 	"github.com/ali63yavari/outbox-abstraction/abstraction"
 	"github.com/google/uuid"
-	"gorm.io/driver/sqlite"
 	"gorm.io/gorm"
-	"gorm.io/gorm/logger"
 )
 
 // Mock event type
-type mockEventType struct {
-	name string
-	id   int
-}
+// type mockEventType struct {
+// 	name string
+// 	id   int
+// }
 
-func (m mockEventType) GetName() string {
-	return m.name
-}
+// func (m mockEventType) GetName() string {
+// 	return m.name
+// }
 
-func (m mockEventType) GetID() int {
-	return m.id
-}
+// func (m mockEventType) GetID() int {
+// 	return m.id
+// }
 
 // TestEventModel for SQLite (without PostgreSQL-specific features)
 type TestEventModel struct {
@@ -49,26 +47,26 @@ func (TestEventModel) TableName() string {
 }
 
 // Setup test database
-func setupTestDB(t *testing.T) *gorm.DB {
-	// Use in-memory SQLite for testing
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{
-		Logger: logger.Default.LogMode(logger.Silent),
-	})
-	if err != nil {
-		t.Fatalf("Failed to connect to test database: %v", err)
-	}
+// func setupTestDB(t *testing.T) *gorm.DB {
+// 	// Use in-memory SQLite for testing
+// 	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{
+// 		Logger: logger.Default.LogMode(logger.Silent),
+// 	})
+// 	if err != nil {
+// 		t.Fatalf("Failed to connect to test database: %v", err)
+// 	}
 
-	// Run migrations using test model
-	err = db.AutoMigrate(&TestEventModel{})
-	if err != nil {
-		t.Fatalf("Failed to migrate test database: %v", err)
-	}
+// 	// Run migrations using test model
+// 	err = db.AutoMigrate(&TestEventModel{})
+// 	if err != nil {
+// 		t.Fatalf("Failed to migrate test database: %v", err)
+// 	}
 
-	// Override the table name for EventModel to use the same table
-	db.Table("event_models")
+// 	// Override the table name for EventModel to use the same table
+// 	db.Table("event_models")
 
-	return db
-}
+// 	return db
+// }
 
 func TestEventModel_FromOutboxEvent(t *testing.T) {
 	outboxEvent := &abstraction.OutboxEvent{
