@@ -27,6 +27,7 @@ make test-unit
 ```
 
 Expected output:
+
 ```
 ✓ 12 tests in abstraction module
 ✓ 2 tests in PostgreSQL module
@@ -39,12 +40,14 @@ make docker-integration
 ```
 
 This will:
+
 1. ✓ Start PostgreSQL in Docker
 2. ✓ Wait for database to be ready
 3. ✓ Run 5 integration tests
 4. ✓ Keep PostgreSQL running
 
 **Stop PostgreSQL:**
+
 ```bash
 make docker-down
 ```
@@ -57,17 +60,17 @@ make docker-test
 
 ## Common Commands
 
-| What You Want | Command |
-|---------------|---------|
-| See all commands | `make help` |
-| Install dependencies | `make install` |
-| Run unit tests | `make test-unit` |
+| What You Want         | Command                   |
+| --------------------- | ------------------------- |
+| See all commands      | `make help`               |
+| Install dependencies  | `make install`            |
+| Run unit tests        | `make test-unit`          |
 | Run integration tests | `make docker-integration` |
-| Start PostgreSQL | `make docker-up` |
-| Stop PostgreSQL | `make docker-down` |
-| Format code | `make fmt` |
-| Check code quality | `make verify` |
-| Clean up | `make clean` |
+| Start PostgreSQL      | `make docker-up`          |
+| Stop PostgreSQL       | `make docker-down`        |
+| Format code           | `make fmt`                |
+| Check code quality    | `make verify`             |
+| Clean up              | `make clean`              |
 
 ## Basic Usage Example
 
@@ -77,7 +80,7 @@ package main
 import (
     "context"
     "time"
-    "github.com/ali63yavari/outbox_abstraction/abstraction"
+    "github.com/ali63yavari/outbox-abstraction/abstraction"
     "outbox_uow_sql/sql_channel"
     "gorm.io/driver/postgres"
     "gorm.io/gorm"
@@ -122,7 +125,7 @@ func main() {
         "user-123",
         map[string]interface{}{"email": "user@example.com"},
     )
-    
+
     channel.RegisterEvent(event)
 }
 ```
@@ -193,10 +196,10 @@ make verify
 ```
 
 This runs:
+
 - Code formatting
 - Static analysis
 - Build check
 - Unit tests
 
 If all pass, you're ready to develop! 🚀
-

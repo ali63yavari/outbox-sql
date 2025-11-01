@@ -8,7 +8,7 @@ import (
 	"sync"
 	"time"
 
-	"github.com/ali63yavari/outbox_abstraction/abstraction"
+	"github.com/ali63yavari/outbox-abstraction/abstraction"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )

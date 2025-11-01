@@ -3,7 +3,7 @@ package sqlchannel
 import (
 	"time"
 
-	"github.com/ali63yavari/outbox_abstraction/abstraction"
+	"github.com/ali63yavari/outbox-abstraction/abstraction"
 	"github.com/google/uuid"
 
 	"gorm.io/gorm"

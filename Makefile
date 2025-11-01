@@ -34,26 +34,21 @@ help: ## Show this help message
 
 install: ## Install dependencies
 	@echo "$(GREEN)Installing dependencies...$(NC)"
-	cd outbox_uow_abstraction && go mod download
-	cd outbox_uow_sql && GOINSECURE="proxy.golang.org" go mod download
+	go mod download
 	@echo "$(GREEN)Dependencies installed successfully!$(NC)"
 
 deps: install ## Alias for install
 
 tidy: ## Tidy go modules
 	@echo "$(GREEN)Tidying go modules...$(NC)"
-	cd outbox_uow_abstraction && go mod tidy
-	cd outbox_uow_sql && go mod tidy
+	go mod tidy
 	@echo "$(GREEN)Go modules tidied!$(NC)"
 
 test-unit: ## Run unit tests only
 	@echo "$(GREEN)Running unit tests...$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Testing Abstraction Module...$(NC)"
-	cd outbox_uow_abstraction && $(GOTEST) -v ./abstraction
-	@echo ""
-	@echo "$(YELLOW)Testing PostgreSQL Module (Unit Tests)...$(NC)"
-	cd outbox_uow_sql && $(GOTEST) -v ./sql_channel
+	@echo "$(YELLOW)Testing sqlchannel (Unit Tests)...$(NC)"
+	$(GOTEST) ./sqlchannel -run 'Test[^I]' -short
 	@echo ""
 	@echo "$(GREEN)Unit tests completed!$(NC)"
 
@@ -66,7 +61,7 @@ test-integration: ## Run integration tests (requires PostgreSQL)
 		exit 1; \
 	fi
 	@echo ""
-	cd outbox_uow_sql && $(GOTEST) -tags=integration -v ./sql_channel
+	$(GOTEST) -v ./sqlchannel -run 'TestI'
 	@echo ""
 	@echo "$(GREEN)Integration tests completed!$(NC)"
 
@@ -79,7 +74,7 @@ test-integration-docker: ## Run integration tests inside Docker (used by docker-
 	done
 	@echo "PostgreSQL is ready!"
 	@echo ""
-	cd outbox_uow_sql && $(GOTEST) -tags=integration -v ./sql_channel
+	$(GOTEST) -v ./sqlchannel -run 'TestI'
 	@echo ""
 	@echo "$(GREEN)Integration tests completed!$(NC)"
 
@@ -88,62 +83,52 @@ test-all: test-unit test-integration ## Run all tests (unit + integration)
 test: test-unit ## Alias for test-unit (default test target)
 
 coverage: ## Generate test coverage report
-	@echo "$(GREEN)Generating coverage reports...$(NC)"
+	@echo "$(GREEN)Generating coverage report...$(NC)"
 	@echo ""
-	@echo "$(YELLOW)Abstraction Module Coverage...$(NC)"
-	cd outbox_uow_abstraction && $(GOTEST) -coverprofile=coverage.out ./abstraction
-	cd outbox_uow_abstraction && go tool cover -html=coverage.out -o coverage.html
-	@echo "Coverage report: outbox_uow_abstraction/coverage.html"
+	@echo "$(YELLOW)sqlchannel Module Coverage...$(NC)"
+	$(GOTEST) -coverprofile=coverage.out ./sqlchannel
+	go tool cover -html=coverage.out -o coverage.html
+	@echo "Coverage report: coverage.html"
 	@echo ""
-	@echo "$(YELLOW)PostgreSQL Module Coverage...$(NC)"
-	cd outbox_uow_sql && $(GOTEST) -coverprofile=coverage.out ./sql_channel
-	cd outbox_uow_sql && go tool cover -html=coverage.out -o coverage.html
-	@echo "Coverage report: outbox_uow_sql/coverage.html"
-	@echo ""
-	@echo "$(GREEN)Coverage reports generated!$(NC)"
+	@echo "$(GREEN)Coverage report generated!$(NC)"
 
 coverage-integration: ## Generate integration test coverage
 	@echo "$(GREEN)Generating integration test coverage...$(NC)"
-	cd outbox_uow_sql && $(GOTEST) -tags=integration -coverprofile=coverage-integration.out ./sql_channel
-	cd outbox_uow_sql && go tool cover -html=coverage-integration.out -o coverage-integration.html
-	@echo "Coverage report: outbox_uow_sql/coverage-integration.html"
+	$(GOTEST) -coverprofile=coverage-integration.out ./sqlchannel -run 'TestI'
+	go tool cover -html=coverage-integration.out -o coverage-integration.html
+	@echo "Coverage report: coverage-integration.html"
 	@echo "$(GREEN)Integration coverage report generated!$(NC)"
 
 fmt: ## Format Go code
 	@echo "$(GREEN)Formatting Go code...$(NC)"
-	$(GOFMT) -w -s outbox_uow_abstraction/
-	$(GOFMT) -w -s outbox_uow_sql/
+	$(GOFMT) -w -s .
 	@echo "$(GREEN)Code formatted!$(NC)"
 
 vet: ## Run go vet
 	@echo "$(GREEN)Running go vet...$(NC)"
-	cd outbox_uow_abstraction && $(GOVET) ./...
-	cd outbox_uow_sql && $(GOVET) ./...
+	$(GOVET) ./...
 	@echo "$(GREEN)go vet completed!$(NC)"
 
 lint: ## Run linter (requires golangci-lint)
 	@echo "$(GREEN)Running linter...$(NC)"
 	@if command -v $(GOLINT) > /dev/null; then \
-		cd outbox_uow_abstraction && $(GOLINT) run ./...; \
-		cd ../outbox_uow_sql && $(GOLINT) run ./...; \
+		$(GOLINT) run ./...; \
 		echo "$(GREEN)Linting completed!$(NC)"; \
 	else \
 		echo "$(YELLOW)golangci-lint not installed. Skipping...$(NC)"; \
 		echo "Install with: curl -sSfL https://raw.githubusercontent.com/golangci/golangci-lint/master/install.sh | sh -s -- -b \$$(go env GOPATH)/bin"; \
 	fi
 
-build: ## Build the modules
-	@echo "$(GREEN)Building modules...$(NC)"
-	cd outbox_uow_abstraction && go build ./...
-	cd outbox_uow_sql && go build ./...
+build: ## Build the module
+	@echo "$(GREEN)Building module...$(NC)"
+	go build ./...
 	@echo "$(GREEN)Build completed!$(NC)"
 
 clean: ## Clean build artifacts and test cache
 	@echo "$(GREEN)Cleaning...$(NC)"
 	go clean -testcache
-	rm -f outbox_uow_abstraction/coverage.out outbox_uow_abstraction/coverage.html
-	rm -f outbox_uow_sql/coverage.out outbox_uow_sql/coverage.html
-	rm -f outbox_uow_sql/coverage-integration.out outbox_uow_sql/coverage-integration.html
+	rm -f coverage.out coverage.html
+	rm -f coverage-integration.out coverage-integration.html
 	@echo "$(GREEN)Cleaned!$(NC)"
 
 docker-up: ## Start PostgreSQL using Docker Compose
