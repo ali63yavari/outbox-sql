@@ -1,4 +1,4 @@
-module outbox_uow_sql
+module github.com/ali63yavari/outbox-sql.git
 
 go 1.23.12
 
