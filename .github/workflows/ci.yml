@@ -89,7 +89,8 @@ jobs:
           TEST_DB_USER: postgres
           TEST_DB_PASSWORD: postgres
           TEST_DB_NAME: outbox_test
-        run: go test -v ./sqlchannel -run 'TestI'
+        # run: go test -v ./sqlchannel -run 'TestI'
+        run: go test -tags=integration -v ./sqlchannel -run 'TestI'
 
       - name: Generate coverage report
         env:
