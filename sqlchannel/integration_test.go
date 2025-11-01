@@ -1,7 +1,7 @@
 //go:build integration
 // +build integration
 
-package pgsqlchannel
+package sqlchannel
 
 import (
 	"context"
@@ -17,7 +17,7 @@ import (
 )
 
 // Integration tests require a real PostgreSQL database
-// Run with: go test -tags=integration -v ./pgsql_channel
+// Run with: go test -tags=integration -v ./sql_channel
 //
 // Set the following environment variables:
 // export TEST_DB_HOST=localhost
@@ -83,7 +83,7 @@ func TestIntegration_RegisterEvent(t *testing.T) {
 	maxRetries := 3
 	batchSize := 10
 
-	channel := NewPgSqlEventChannel(ctx, db, eventType, &maxRetries, &batchSize, &interval, handler)
+	channel := NewsqlEventChannel(ctx, db, eventType, &maxRetries, &batchSize, &interval, handler)
 
 	// Create an event
 	event := abstraction.CreateNewEvent(eventType, "User", "user-123", map[string]interface{}{
@@ -135,7 +135,7 @@ func TestIntegration_ProcessBatch_SuccessfulEvents(t *testing.T) {
 	maxRetries := 3
 	batchSize := 10
 
-	channel := NewPgSqlEventChannel(ctx, db, eventType, &maxRetries, &batchSize, &interval, handler)
+	channel := NewsqlEventChannel(ctx, db, eventType, &maxRetries, &batchSize, &interval, handler)
 
 	// Create and register events
 	event1 := abstraction.CreateNewEvent(eventType, "User", "user-1", map[string]interface{}{})
@@ -191,8 +191,8 @@ func TestIntegration_ProcessBatch_DifferentEventTypes(t *testing.T) {
 	maxRetries := 3
 	batchSize := 10
 
-	channel1 := NewPgSqlEventChannel(ctx1, db, eventType1, &maxRetries, &batchSize, &interval, handler1)
-	channel2 := NewPgSqlEventChannel(ctx2, db, eventType2, &maxRetries, &batchSize, &interval, handler2)
+	channel1 := NewsqlEventChannel(ctx1, db, eventType1, &maxRetries, &batchSize, &interval, handler1)
+	channel2 := NewsqlEventChannel(ctx2, db, eventType2, &maxRetries, &batchSize, &interval, handler2)
 
 	// Create events of different types
 	event1 := abstraction.CreateNewEvent(eventType1, "User", "user-1", map[string]interface{}{})
@@ -242,7 +242,7 @@ func TestIntegration_FailedEvent_Retry(t *testing.T) {
 	maxRetries := 5
 	batchSize := 10
 
-	channel := NewPgSqlEventChannel(ctx, db, eventType, &maxRetries, &batchSize, &interval, handler)
+	channel := NewsqlEventChannel(ctx, db, eventType, &maxRetries, &batchSize, &interval, handler)
 
 	// Create and register event
 	event := abstraction.CreateNewEvent(eventType, "Test", "test-1", map[string]interface{}{})
@@ -284,7 +284,7 @@ func TestIntegration_MaxRetries_MarkAsFailed(t *testing.T) {
 	maxRetries := 2
 	batchSize := 10
 
-	channel := NewPgSqlEventChannel(ctx, db, eventType, &maxRetries, &batchSize, &interval, handler)
+	channel := NewsqlEventChannel(ctx, db, eventType, &maxRetries, &batchSize, &interval, handler)
 
 	// Create and register event
 	event := abstraction.CreateNewEvent(eventType, "Test", "test-1", map[string]interface{}{})

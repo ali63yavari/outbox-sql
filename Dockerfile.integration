@@ -14,11 +14,11 @@ WORKDIR /workspace
 
 # Copy go mod files
 COPY outbox_uow_abstraction/go.mod outbox_uow_abstraction/go.sum ./outbox_uow_abstraction/
-COPY outbox_uow_pgsql/go.mod outbox_uow_pgsql/go.sum ./outbox_uow_pgsql/
+COPY outbox_uow_sql/go.mod outbox_uow_sql/go.sum ./outbox_uow_sql/
 
 # Download dependencies
 RUN cd outbox_uow_abstraction && go mod download
-RUN cd outbox_uow_pgsql && GOINSECURE="proxy.golang.org" go mod download
+RUN cd outbox_uow_sql && GOINSECURE="proxy.golang.org" go mod download
 
 # Copy source code
 COPY . .

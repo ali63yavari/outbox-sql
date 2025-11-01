@@ -1,4 +1,4 @@
-module outbox_uow_pgsql
+module outbox_uow_sql
 
 go 1.23.12
 
@@ -16,4 +16,4 @@ require (
 	gorm.io/driver/sqlite v1.6.0 // indirect
 )
 
-replace github.com/ali63yavari/outbox-abstraction => ../outbox_uow_abstraction
+// replace github.com/ali63yavari/outbox-abstraction => ../outbox_uow_abstraction

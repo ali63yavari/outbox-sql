@@ -7,14 +7,14 @@ Guide for splitting the monorepo into separate repositories.
 ```
 outbox_uow/
 ├── outbox_uow_abstraction/
-└── outbox_uow_pgsql/
+└── outbox_uow_sql/
 ```
 
 ## Target Structure (Multiple Repos)
 
 ```
 github.com/arash/outbox-abstraction/    (Repository 1)
-github.com/arash/outbox-pgsql/          (Repository 2)
+github.com/arash/outbox-sql/          (Repository 2)
 ```
 
 ## Step-by-Step Migration
@@ -79,7 +79,7 @@ manager := abstraction.NewOutboxEventManager()
 
 ## Implementations
 
-- [PostgreSQL](https://github.com/arash/outbox-pgsql) - Official implementation
+- [PostgreSQL](https://github.com/arash/outbox-sql) - Official implementation
 - [NATS](https://github.com/arash/outbox-nats) - Community implementation
 - See [EXTENSION_GUIDE.md](EXTENSION_GUIDE.md) for creating your own
 
@@ -112,25 +112,25 @@ git push origin v1.0.0
 #### 1. Create New Repository
 
 ```bash
-# On GitHub, create: github.com/arash/outbox-pgsql
+# On GitHub, create: github.com/arash/outbox-sql
 ```
 
 #### 2. Extract PostgreSQL Code
 
 ```bash
 # Create new directory
-mkdir -p ~/temp/outbox-pgsql
-cd ~/temp/outbox-pgsql
+mkdir -p ~/temp/outbox-sql
+cd ~/temp/outbox-sql
 
 # Initialize git
 git init
 
 # Copy PostgreSQL code
-cp -r /path/to/outbox_uow/outbox_uow_pgsql/* .
+cp -r /path/to/outbox_uow/outbox_uow_sql/* .
 
 # Update go.mod to reference public abstraction
 cat > go.mod << 'EOF'
-module github.com/arash/outbox-pgsql
+module github.com/arash/outbox-sql
 
 go 1.23
 
@@ -167,7 +167,7 @@ PostgreSQL implementation of the Outbox Pattern.
 ## Installation
 
 ```bash
-go get github.com/arash/outbox-pgsql
+go get github.com/arash/outbox-sql
 ```
 
 ## Quick Start
@@ -175,11 +175,11 @@ go get github.com/arash/outbox-pgsql
 ```go
 import (
     "github.com/arash/outbox-abstraction/abstraction"
-    "github.com/arash/outbox-pgsql/pgsql_channel"
+    "github.com/arash/outbox-sql/sql_channel"
 )
 
 // Create channel
-channel := pgsqlchannel.NewPgSqlEventChannel(...)
+channel := sqlchannel.NewsqlEventChannel(...)
 
 // Register with manager
 manager := abstraction.NewOutboxEventManager()
@@ -212,7 +212,7 @@ git add .
 git commit -m "Initial commit: PostgreSQL implementation"
 
 # Add remote and push
-git remote add origin git@github.com:arash/outbox-pgsql.git
+git remote add origin git@github.com:arash/outbox-sql.git
 git branch -M main
 git push -u origin main
 ```
@@ -220,7 +220,7 @@ git push -u origin main
 #### 3. Create Release Tag
 
 ```bash
-cd ~/temp/outbox-pgsql
+cd ~/temp/outbox-sql
 git tag v1.0.0
 git push origin v1.0.0
 ```
@@ -230,7 +230,7 @@ git push origin v1.0.0
 #### In PostgreSQL Implementation
 
 ```bash
-cd ~/temp/outbox-pgsql
+cd ~/temp/outbox-sql
 
 # Update import paths in all Go files
 find . -name "*.go" -type f -exec sed -i '' \
@@ -254,7 +254,7 @@ cd ~/temp/outbox-abstraction
 go test ./...
 
 # Test PostgreSQL implementation
-cd ~/temp/outbox-pgsql
+cd ~/temp/outbox-sql
 go mod tidy
 make test-unit
 make docker-integration
@@ -269,7 +269,7 @@ make docker-integration
 go get github.com/arash/outbox-abstraction
 
 # Install PostgreSQL implementation
-go get github.com/arash/outbox-pgsql
+go get github.com/arash/outbox-sql
 ```
 
 ### In Code
@@ -279,7 +279,7 @@ package main
 
 import (
     "github.com/arash/outbox-abstraction/abstraction"
-    "github.com/arash/outbox-pgsql/pgsql_channel"
+    "github.com/arash/outbox-sql/sql_channel"
 )
 
 func main() {
@@ -287,7 +287,7 @@ func main() {
     manager := abstraction.NewOutboxEventManager()
     
     // Use PostgreSQL implementation
-    channel := pgsqlchannel.NewPgSqlEventChannel(...)
+    channel := sqlchannel.NewsqlEventChannel(...)
     manager.RegisterEventChannel(eventType, channel)
 }
 ```
@@ -301,10 +301,10 @@ func main() {
 github.com/arash/outbox-abstraction v1.0.0  (rarely changes)
 
 # Active development on implementation
-github.com/arash/outbox-pgsql v1.0.0
-github.com/arash/outbox-pgsql v1.1.0  (bug fix)
-github.com/arash/outbox-pgsql v1.2.0  (optimization)
-github.com/arash/outbox-pgsql v2.0.0  (major update)
+github.com/arash/outbox-sql v1.0.0
+github.com/arash/outbox-sql v1.1.0  (bug fix)
+github.com/arash/outbox-sql v1.2.0  (optimization)
+github.com/arash/outbox-sql v2.0.0  (major update)
 ```
 
 ### 2. Clear Dependencies
@@ -322,7 +322,7 @@ Implementations (can change)
 ```
 Official:
 ├── github.com/arash/outbox-abstraction
-└── github.com/arash/outbox-pgsql
+└── github.com/arash/outbox-sql
 
 Community can create:
 ├── github.com/someone/outbox-nats
@@ -336,7 +336,7 @@ All reference: github.com/arash/outbox-abstraction
 
 ```
 Bug in PostgreSQL?
-├─ Fix in github.com/arash/outbox-pgsql
+├─ Fix in github.com/arash/outbox-sql
 ├─ Release v1.0.1
 └─ Abstraction unchanged ✓
 
@@ -367,7 +367,7 @@ Tags:
 ### PostgreSQL Repository
 
 ```yaml
-Name: outbox-pgsql
+Name: outbox-sql
 Description: PostgreSQL implementation of Outbox Pattern
 Topics: outbox-pattern, postgresql, event-sourcing, go, gorm
 License: MIT
@@ -488,10 +488,10 @@ If you need to maintain the old monorepo temporarily:
 
 ```bash
 # In old monorepo, update go.mod
-cd outbox_uow/outbox_uow_pgsql
+cd outbox_uow/outbox_uow_sql
 
 # Replace local reference with public
-module outbox_uow_pgsql
+module outbox_uow_sql
 
 require (
     github.com/arash/outbox-abstraction v1.0.0  // Changed!

@@ -265,11 +265,11 @@ Integration tests are tagged with `// +build integration` and require:
 make docker-up
 
 # Run specific test
-cd outbox_uow_pgsql
-go test -tags=integration -v ./pgsql_channel -run TestIntegration_RegisterEvent
+cd outbox_uow_sql
+go test -tags=integration -v ./sql_channel -run TestIntegration_RegisterEvent
 
 # Run with timeout
-go test -tags=integration -v -timeout 30s ./pgsql_channel
+go test -tags=integration -v -timeout 30s ./sql_channel
 ```
 
 ## Continuous Integration
@@ -386,8 +386,8 @@ make clean
 make db-reset
 
 # Run tests with verbose output
-cd outbox_uow_pgsql
-go test -tags=integration -v ./pgsql_channel
+cd outbox_uow_sql
+go test -tags=integration -v ./sql_channel
 ```
 
 ### Docker Issues
@@ -433,7 +433,7 @@ make coverage
 
 # Open coverage report in browser
 open outbox_uow_abstraction/coverage.html
-open outbox_uow_pgsql/coverage.html
+open outbox_uow_sql/coverage.html
 
 # Integration test coverage
 make coverage-integration
@@ -448,8 +448,8 @@ make coverage-integration
 cd outbox_uow_abstraction
 go test -bench=. -benchmem ./abstraction
 
-cd ../outbox_uow_pgsql
-go test -tags=integration -bench=. -benchmem ./pgsql_channel
+cd ../outbox_uow_sql
+go test -tags=integration -bench=. -benchmem ./sql_channel
 ```
 
 ### Load Testing
@@ -460,8 +460,8 @@ Start PostgreSQL and create a load test script:
 make docker-up
 
 # Example load test
-cd outbox_uow_pgsql
-go test -tags=integration -v ./pgsql_channel -run TestLoad
+cd outbox_uow_sql
+go test -tags=integration -v ./sql_channel -run TestLoad
 ```
 
 ## Best Practices

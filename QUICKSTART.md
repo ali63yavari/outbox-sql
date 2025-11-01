@@ -78,7 +78,7 @@ import (
     "context"
     "time"
     "github.com/arash/outbox_abstraction/abstraction"
-    "outbox_uow_pgsql/pgsql_channel"
+    "outbox_uow_sql/sql_channel"
     "gorm.io/driver/postgres"
     "gorm.io/gorm"
 )
@@ -105,7 +105,7 @@ func main() {
     interval := 60 * time.Second
 
     // Create channel
-    channel := pgsqlchannel.NewPgSqlEventChannel(
+    channel := sqlchannel.NewsqlEventChannel(
         context.Background(),
         db,
         UserCreated{},

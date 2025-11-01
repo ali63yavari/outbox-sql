@@ -1,4 +1,4 @@
-package pgsqlchannel
+package sqlchannel
 
 import (
 	"testing"
@@ -173,10 +173,10 @@ func TestProcessBatch_DifferentEventTypes(t *testing.T) {
 	t.Skip("Skipping database integration test - requires PostgreSQL")
 }
 
-func TestNewPgSqlEventChannel_DefaultValues(t *testing.T) {
+func TestNewsqlEventChannel_DefaultValues(t *testing.T) {
 	t.Skip("Skipping database integration test - requires PostgreSQL")
 }
 
-func TestNewPgSqlEventChannel_CustomValues(t *testing.T) {
+func TestNewsqlEventChannel_CustomValues(t *testing.T) {
 	t.Skip("Skipping database integration test - requires PostgreSQL")
 }

@@ -20,8 +20,8 @@ echo ""
 
 # Test PostgreSQL module (unit tests)
 echo "${GREEN}Testing PostgreSQL Module (Unit Tests)...${NC}"
-cd ../outbox_uow_pgsql
-go test -v ./pgsql_channel
+cd ../outbox_uow_sql
+go test -v ./sql_channel
 echo ""
 
 # Check if integration tests should run
@@ -33,7 +33,7 @@ if [ "$RUN_INTEGRATION" = "true" ]; then
     # Check if PostgreSQL is available
     if command -v pg_isready &> /dev/null; then
         if pg_isready -h ${TEST_DB_HOST:-localhost} -p ${TEST_DB_PORT:-5432} &> /dev/null; then
-            go test -tags=integration -v ./pgsql_channel
+            go test -tags=integration -v ./sql_channel
         else
             echo "${YELLOW}PostgreSQL is not ready. Skipping integration tests.${NC}"
             echo "To run integration tests, start PostgreSQL and set RUN_INTEGRATION=true"

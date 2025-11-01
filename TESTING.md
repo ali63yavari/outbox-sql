@@ -37,7 +37,7 @@ This document describes the testing strategy and how to run tests for the Outbox
 - `TestOutboxEventManager_MultipleChannels`
 - `TestOutboxEventManager_ChannelIsolation`
 
-### PostgreSQL Module Tests (`outbox_uow_pgsql/pgsql_channel`)
+### PostgreSQL Module Tests (`outbox_uow_sql/sql_channel`)
 
 #### `channel_test.go` (Unit Tests)
 - ✅ EventModel to/from OutboxEvent conversion
@@ -50,8 +50,8 @@ This document describes the testing strategy and how to run tests for the Outbox
 - `TestRegisterEvent_MultipleEvents` (skipped)
 - `TestProcessBatch_SuccessfulEvents` (skipped)
 - `TestProcessBatch_DifferentEventTypes` (skipped)
-- `TestNewPgSqlEventChannel_DefaultValues` (skipped)
-- `TestNewPgSqlEventChannel_CustomValues` (skipped)
+- `TestNewsqlEventChannel_DefaultValues` (skipped)
+- `TestNewsqlEventChannel_CustomValues` (skipped)
 
 #### `integration_test.go` (Integration Tests)
 
@@ -74,8 +74,8 @@ cd outbox_uow_abstraction
 go test -v ./abstraction
 
 # Test PostgreSQL module (unit tests)
-cd ../outbox_uow_pgsql
-go test -v ./pgsql_channel
+cd ../outbox_uow_sql
+go test -v ./sql_channel
 ```
 
 ### Integration Tests with PostgreSQL
@@ -95,8 +95,8 @@ docker run -d \
 sleep 3
 
 # Run integration tests
-cd outbox_uow_pgsql
-go test -tags=integration -v ./pgsql_channel
+cd outbox_uow_sql
+go test -tags=integration -v ./sql_channel
 
 # Cleanup
 docker stop outbox-test-db && docker rm outbox-test-db
@@ -116,8 +116,8 @@ export TEST_DB_NAME=outbox_test
 createdb outbox_test
 
 # Run integration tests
-cd outbox_uow_pgsql
-go test -tags=integration -v ./pgsql_channel
+cd outbox_uow_sql
+go test -tags=integration -v ./sql_channel
 
 # Cleanup
 dropdb outbox_test
@@ -132,8 +132,8 @@ go test -coverprofile=coverage.out ./abstraction
 go tool cover -html=coverage.out
 
 # PostgreSQL module
-cd ../outbox_uow_pgsql
-go test -coverprofile=coverage.out ./pgsql_channel
+cd ../outbox_uow_sql
+go test -coverprofile=coverage.out ./sql_channel
 go tool cover -html=coverage.out
 ```
 
@@ -181,8 +181,8 @@ jobs:
       
       - name: Test PostgreSQL (unit)
         run: |
-          cd outbox_uow_pgsql
-          go test -v ./pgsql_channel
+          cd outbox_uow_sql
+          go test -v ./sql_channel
 
   integration-tests:
     runs-on: ubuntu-latest
@@ -214,8 +214,8 @@ jobs:
           TEST_DB_PASSWORD: postgres
           TEST_DB_NAME: outbox_test
         run: |
-          cd outbox_uow_pgsql
-          go test -tags=integration -v ./pgsql_channel
+          cd outbox_uow_sql
+          go test -tags=integration -v ./sql_channel
 ```
 
 ## Test Results

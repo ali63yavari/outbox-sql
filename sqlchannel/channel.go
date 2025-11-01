@@ -1,4 +1,4 @@
-package pgsqlchannel
+package sqlchannel
 
 import (
 	"context"
@@ -8,18 +8,18 @@ import (
 	"sync"
 	"time"
 
-	"github.com/arash/outbox_abstraction/abstraction"
+	"github.com/ali63yavari/outbox_abstraction/abstraction"
 	"gorm.io/gorm"
 	"gorm.io/gorm/clause"
 )
 
 var initOnce sync.Once
 
-type PgSqlEventChannel interface {
+type SqlEventChannel interface {
 	RegisterEvent(event abstraction.OutboxEvent) error
 }
 
-type pgSqlEventChannel struct {
+type sqlEventChannel struct {
 	db         *gorm.DB
 	ctx        context.Context
 	eventType  abstraction.OutboxEventType
@@ -29,14 +29,14 @@ type pgSqlEventChannel struct {
 	handler    abstraction.OutboxEventHandler
 }
 
-func NewPgSqlEventChannel(ctx context.Context,
+func NewsqlEventChannel(ctx context.Context,
 	db *gorm.DB,
 	eventType abstraction.OutboxEventType,
 	maxRetries *int,
 	batchSize *int,
 	interval *time.Duration,
 	handler abstraction.OutboxEventHandler,
-) PgSqlEventChannel {
+) SqlEventChannel {
 	mr := 3
 	if maxRetries != nil && *maxRetries > 0 {
 		mr = *maxRetries
@@ -54,11 +54,11 @@ func NewPgSqlEventChannel(ctx context.Context,
 
 	initOnce.Do(func() {
 		if err := db.AutoMigrate(&EventModel{}); err != nil {
-			log.Printf("ERROR: pgsql channel migration failed: %v", err)
+			log.Printf("ERROR: sql channel migration failed: %v", err)
 		}
 	})
 
-	ch := &pgSqlEventChannel{
+	ch := &sqlEventChannel{
 		db:         db,
 		ctx:        ctx,
 		eventType:  eventType,
@@ -73,7 +73,7 @@ func NewPgSqlEventChannel(ctx context.Context,
 	return ch
 }
 
-func (c *pgSqlEventChannel) RegisterEvent(event abstraction.OutboxEvent) error {
+func (c *sqlEventChannel) RegisterEvent(event abstraction.OutboxEvent) error {
 	md := FromOutboxEvent(&event)
 	err := c.db.Model(EventModel{}).Create(&md).Error
 	if err != nil {
@@ -82,7 +82,7 @@ func (c *pgSqlEventChannel) RegisterEvent(event abstraction.OutboxEvent) error {
 	return nil
 }
 
-func (c *pgSqlEventChannel) run() {
+func (c *sqlEventChannel) run() {
 	timer := time.NewTicker(c.interval)
 	defer timer.Stop()
 
@@ -100,7 +100,7 @@ func (c *pgSqlEventChannel) run() {
 	}
 }
 
-func (c *pgSqlEventChannel) processBatch() error {
+func (c *sqlEventChannel) processBatch() error {
 	// Fetch events in a transaction with row locking
 	var events []EventModel
 	err := c.db.WithContext(c.ctx).Transaction(func(tx *gorm.DB) error {
@@ -136,7 +136,7 @@ func (c *pgSqlEventChannel) processBatch() error {
 	return nil
 }
 
-func (c *pgSqlEventChannel) handleEvent(ctx context.Context, evt EventModel) error {
+func (c *sqlEventChannel) handleEvent(ctx context.Context, evt EventModel) error {
 	return c.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {
 		err := c.handler(ctx, evt.ToOutboxEvent())
 		now := time.Now()
